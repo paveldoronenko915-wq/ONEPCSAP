@@ -1,0 +1,898 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PC Builds — Сборки ПК и Конфигуратор</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800&display=swap');
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            background-attachment: fixed;
+            color: #333;
+            min-height: 100vh;
+            padding: 30px 15px;
+        }
+
+        .container { max-width: 1300px; margin: 0 auto; }
+
+        header {
+            text-align: center;
+            color: #fff;
+            margin-bottom: 40px;
+        }
+
+        header h1 {
+            font-size: 46px;
+            font-weight: 800;
+            margin-bottom: 10px;
+            text-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+        }
+
+        header p { font-size: 18px; opacity: 0.9; }
+
+        .section-title {
+            color: #fff;
+            font-size: 30px;
+            font-weight: 800;
+            margin-bottom: 25px;
+            text-align: center;
+            text-shadow: 0 3px 12px rgba(0, 0, 0, 0.4);
+        }
+
+        .builds-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 25px;
+            margin-bottom: 60px;
+        }
+
+        .build-card {
+            background: #fff;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.25);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .build-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 25px 55px rgba(0, 0, 0, 0.35);
+        }
+
+        .build-image {
+            width: 100%;
+            height: 200px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .build-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+        .build-body { padding: 25px; flex: 1; display: flex; flex-direction: column; }
+
+        .build-brand {
+            font-size: 12px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: #667eea;
+            margin-bottom: 5px;
+        }
+
+        .build-card h3 {
+            font-size: 24px;
+            margin-bottom: 10px;
+            color: #1e3c72;
+            font-weight: 800;
+        }
+
+        .build-card .price {
+            font-size: 30px;
+            font-weight: 800;
+            color: #667eea;
+            margin-bottom: 15px;
+        }
+
+        .build-card .short-specs {
+            list-style: none;
+            margin-bottom: 20px;
+            flex: 1;
+        }
+
+        .build-card .short-specs li {
+            padding: 6px 0;
+            font-size: 14px;
+            color: #555;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .build-card .short-specs li:last-child { border-bottom: none; }
+
+        .build-card button {
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #fff;
+            border: none;
+            border-radius: 10px;
+            font-size: 15px;
+            font-weight: 700;
+            font-family: 'Montserrat', sans-serif;
+            cursor: pointer;
+            transition: transform 0.2s ease;
+        }
+
+        .build-card button:hover { transform: scale(1.03); }
+
+        .configurator {
+            background: #fff;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.25);
+            margin-bottom: 40px;
+        }
+
+        .configurator h2 {
+            color: #1e3c72;
+            font-size: 30px;
+            margin-bottom: 15px;
+            text-align: center;
+            font-weight: 800;
+        }
+
+        .configurator .subtitle {
+            text-align: center;
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 15px;
+        }
+
+        .input-row {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 25px;
+            flex-wrap: wrap;
+        }
+
+        .input-row input {
+            flex: 1;
+            min-width: 200px;
+            padding: 18px 20px;
+            border: 2px solid #ddd;
+            border-radius: 12px;
+            font-size: 18px;
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 600;
+            outline: none;
+            transition: border-color 0.3s ease;
+        }
+
+        .input-row input:focus { border-color: #667eea; }
+
+        .btn-find {
+            width: 100%;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #fff;
+            border: none;
+            border-radius: 12px;
+            font-size: 18px;
+            font-weight: 800;
+            font-family: 'Montserrat', sans-serif;
+            cursor: pointer;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .btn-find:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 30px rgba(118, 75, 162, 0.5);
+        }
+
+        #result {
+            margin-top: 30px;
+            padding: 30px;
+            background: #f8f9fa;
+            border-radius: 15px;
+            display: none;
+            border-left: 6px solid #667eea;
+            animation: fadeIn 0.5s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(15px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        #result h3 {
+            color: #1e3c72;
+            margin-bottom: 20px;
+            font-size: 24px;
+            font-weight: 800;
+        }
+
+        #result .spec {
+            display: flex;
+            justify-content: space-between;
+            padding: 12px 0;
+            border-bottom: 1px dashed #ddd;
+            font-size: 15px;
+        }
+
+        #result .spec:last-of-type { border-bottom: none; }
+
+        #result .spec strong { color: #1e3c72; }
+
+        #result .total {
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 2px solid #667eea;
+            font-size: 24px;
+            font-weight: 800;
+            color: #667eea;
+            text-align: right;
+        }
+
+        #result .total-label {
+            font-size: 14px;
+            color: #999;
+            font-weight: 600;
+            text-align: right;
+        }
+
+        .share-section { text-align: center; margin-top: 25px; }
+
+        .btn-share {
+            padding: 15px 40px;
+            background: #4caf50;
+            color: #fff;
+            border: none;
+            border-radius: 50px;
+            font-size: 16px;
+            font-weight: 700;
+            font-family: 'Montserrat', sans-serif;
+            cursor: pointer;
+            transition: transform 0.2s ease;
+        }
+
+        .btn-share:hover { transform: scale(1.05); box-shadow: 0 10px 25px rgba(76, 175, 80, 0.5); }
+
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.75);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            overflow-y: auto;
+        }
+
+        .modal-overlay.active { display: flex; }
+
+        .modal {
+            background: #fff;
+            border-radius: 20px;
+            max-width: 800px;
+            width: 100%;
+            max-height: 90vh;
+            overflow-y: auto;
+            animation: slideUp 0.4s ease;
+            position: relative;
+        }
+
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(50px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .modal-header {
+            padding: 30px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #fff;
+            border-radius: 20px 20px 0 0;
+            position: relative;
+        }
+
+        .modal-header h2 { font-size: 28px; font-weight: 800; margin-bottom: 5px; }
+        .modal-header .price { font-size: 32px; font-weight: 800; }
+
+        .modal-close {
+            position: absolute;
+            top: 20px; right: 20px;
+            background: rgba(255, 255, 255, 0.25);
+            border: none;
+            color: #fff;
+            width: 40px; height: 40px;
+            border-radius: 50%;
+            font-size: 22px;
+            cursor: pointer;
+            transition: background 0.2s ease;
+        }
+
+        .modal-close:hover { background: rgba(255, 255, 255, 0.4); }
+
+        .modal-body { padding: 30px; }
+
+        .modal-image {
+            width: 100%;
+            height: 300px;
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            border-radius: 15px;
+            overflow: hidden;
+            margin-bottom: 25px;
+        }
+
+        .modal-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .modal-specs { list-style: none; }
+
+        .modal-specs li {
+            display: flex;
+            justify-content: space-between;
+            padding: 14px 0;
+            border-bottom: 1px solid #eee;
+            font-size: 15px;
+        }
+
+        .modal-specs li:last-child { border-bottom: none; }
+
+        .modal-specs li strong { color: #1e3c72; font-weight: 700; }
+
+        .modal-desc {
+            margin-top: 20px;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 12px;
+            line-height: 1.7;
+            color: #555;
+            font-size: 14px;
+        }
+
+        .footer {
+            text-align: center;
+            color: rgba(255, 255, 255, 0.7);
+            margin-top: 40px;
+            font-size: 14px;
+            padding: 20px;
+        }
+
+        @media (max-width: 600px) {
+            header h1 { font-size: 30px; }
+            .configurator { padding: 25px; }
+            .modal-header h2 { font-size: 22px; }
+            .modal-header .price { font-size: 24px; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <header>
+            <h1>🖥️ PC Builds</h1>
+            <p>8 готовых сборок ПК и умный конфигуратор под твой бюджет</p>
+        </header>
+
+        <h2 class="section-title">🔥 Готовые сборки</h2>
+        <div class="builds-grid" id="buildsGrid"></div>
+
+        <div class="configurator">
+            <h2>⚙️ Конфигуратор под бюджет</h2>
+            <p class="subtitle">Введи сумму — я соберу ПК ровно под неё, максимально эффективно</p>
+
+            <div class="input-row">
+                <input type="number" id="budgetInput" placeholder="Например: 150000" min="20000" max="600000" step="1000">
+            </div>
+
+            <button class="btn-find" onclick="buildPC()">🔍 Собрать ПК под бюджет</button>
+
+            <div id="result"></div>
+            <div class="share-section" id="shareSection" style="display: none;">
+                <button class="btn-share" onclick="shareResult()">📤 Поделиться сборкой</button>
+            </div>
+        </div>
+
+        <div class="footer">
+            <p>© PC Builds. Цены примерные и могут отличаться от магазинов.</p>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="modalOverlay" onclick="closeModal(event)">
+        <div class="modal" onclick="event.stopPropagation()">
+            <div class="modal-header">
+                <button class="modal-close" onclick="closeModal()">✕</button>
+                <h2 id="modalTitle"></h2>
+                <div class="price" id="modalPrice"></div>
+            </div>
+            <div class="modal-body">
+                <div class="modal-image" id="modalImage"></div>
+                <ul class="modal-specs" id="modalSpecs"></ul>
+                <div class="modal-desc" id="modalDesc"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ===== БАЗА КОМПЛЕКТУЮЩИХ =====
+        const components = {
+            cpu: [
+                { name: 'Intel Core i3-12100F', price: 8000, socket: 'LGA1700' },
+                { name: 'AMD Ryzen 5 5500', price: 9500, socket: 'AM4' },
+                { name: 'AMD Ryzen 5 5600', price: 11500, socket: 'AM4' },
+                { name: 'Intel Core i5-12400F', price: 13000, socket: 'LGA1700' },
+                { name: 'AMD Ryzen 5 7500F', price: 16000, socket: 'AM5' },
+                { name: 'Intel Core i5-14400F', price: 18000, socket: 'LGA1700' },
+                { name: 'AMD Ryzen 7 7700', price: 26000, socket: 'AM5' },
+                { name: 'Intel Core i7-14700F', price: 32000, socket: 'LGA1700' },
+                { name: 'AMD Ryzen 7 7800X3D', price: 42000, socket: 'AM5' },
+                { name: 'Intel Core i9-14900K', price: 58000, socket: 'LGA1700' },
+                { name: 'AMD Ryzen 9 7950X3D', price: 72000, socket: 'AM5' }
+            ],
+            gpu: [
+                { name: 'GTX 1650 4GB', price: 12000 },
+                { name: 'RTX 3050 8GB', price: 22000 },
+                { name: 'RX 7600 8GB', price: 33000 },
+                { name: 'RTX 4060 8GB', price: 35000 },
+                { name: 'RTX 4060 Ti 8GB', price: 45000 },
+                { name: 'RTX 4070 12GB', price: 60000 },
+                { name: 'RTX 4070 Super 12GB', price: 68000 },
+                { name: 'RTX 4070 Ti Super 16GB', price: 85000 },
+                { name: 'RTX 4080 Super 16GB', price: 120000 },
+                { name: 'RTX 4090 24GB', price: 200000 },
+                { name: 'RTX 5090 32GB', price: 320000 }
+            ],
+            motherboard: [
+                { name: 'A520M', price: 5500, socket: 'AM4' },
+                { name: 'B450M', price: 7000, socket: 'AM4' },
+                { name: 'B550M', price: 10000, socket: 'AM4' },
+                { name: 'A620M', price: 8500, socket: 'AM5' },
+                { name: 'B650M', price: 14000, socket: 'AM5' },
+                { name: 'X670E', price: 32000, socket: 'AM5' },
+                { name: 'B660M', price: 9500, socket: 'LGA1700' },
+                { name: 'B760M', price: 12000, socket: 'LGA1700' },
+                { name: 'Z790', price: 25000, socket: 'LGA1700' }
+            ],
+            ram: [
+                { name: '8GB DDR4 3200', price: 2500, type: 'DDR4' },
+                { name: '16GB DDR4 3200', price: 4500, type: 'DDR4' },
+                { name: '32GB DDR4 3600', price: 8500, type: 'DDR4' },
+                { name: '16GB DDR5 5200', price: 7000, type: 'DDR5' },
+                { name: '32GB DDR5 5600', price: 12000, type: 'DDR5' },
+                { name: '32GB DDR5 6000', price: 15000, type: 'DDR5' },
+                { name: '64GB DDR5 6000', price: 28000, type: 'DDR5' },
+                { name: '128GB DDR5 6000', price: 55000, type: 'DDR5' }
+            ],
+            storage: [
+                { name: '256GB SATA SSD', price: 2000 },
+                { name: '512GB NVMe SSD', price: 4000 },
+                { name: '1TB NVMe SSD', price: 7000 },
+                { name: '2TB NVMe SSD Gen4', price: 14000 },
+                { name: '4TB NVMe SSD Gen4', price: 28000 },
+                { name: '8TB NVMe SSD Gen5', price: 60000 }
+            ],
+            psu: [
+                { name: '450W 80+ Bronze', price: 3000, watts: 450 },
+                { name: '550W 80+ Bronze', price: 4000, watts: 550 },
+                { name: '650W 80+ Bronze', price: 5000, watts: 650 },
+                { name: '750W 80+ Gold', price: 8000, watts: 750 },
+                { name: '850W 80+ Gold', price: 11000, watts: 850 },
+                { name: '1000W 80+ Platinum', price: 18000, watts: 1000 },
+                { name: '1200W 80+ Titanium', price: 28000, watts: 1200 }
+            ],
+            case: [
+                { name: 'Zalman i3 Neo', price: 4500 },
+                { name: 'ARDOR GAMING Rare M6', price: 4900 },
+                { name: 'DeepCool Matrexx 50', price: 6000 },
+                { name: 'Fractal Design Pop Air', price: 8500 },
+                { name: 'Lian Li Lancool 216', price: 9500 },
+                { name: 'NZXT H5 Flow', price: 11000 },
+                { name: 'Corsair 5000D Airflow', price: 16000 },
+                { name: 'Lian Li O11 Dynamic XL', price: 22000 }
+            ],
+            cooler: [
+                { name: 'Стандартный (в комплекте)', price: 0 },
+                { name: 'ID-COOLING SE-224-XTS', price: 2000 },
+                { name: 'DeepCool AK400', price: 3000 },
+                { name: 'Thermalright Peerless Assassin', price: 4500 },
+                { name: 'DeepCool AK620', price: 6500 },
+                { name: 'NZXT Kraken 240 (СЖО)', price: 12000 },
+                { name: 'Arctic Liquid Freezer II 360', price: 15000 },
+                { name: 'NZXT Kraken Elite 360', price: 25000 }
+            ]
+        };
+
+        // ===== 8 ГОТОВЫХ СБОРОК =====
+        const builds = [
+            {
+                id: 'nova-origin',
+                brand: 'NOVA',
+                name: 'Nova Origin',
+                price: 35000,
+                image: 'pc1.jpg',
+                specs: {
+                    'Процессор': 'Intel Core i3-12100F',
+                    'Видеокарта': 'GTX 1650 4GB',
+                    'Материнская плата': 'B660M',
+                    'ОЗУ': '8GB DDR4 3200',
+                    'SSD': '256GB SATA',
+                    'БП': '450W 80+ Bronze',
+                    'Корпус': 'Zalman i3 Neo',
+                    'Охлаждение': 'Стандартное'
+                },
+                desc: 'Базовый ПК для офиса, учёбы и браузера. Отлично справляется с документами, видео и лёгкими задачами. Не для современных игр.'
+            },
+            {
+                id: 'nova-pulse',
+                brand: 'NOVA',
+                name: 'Nova Pulse',
+                price: 60000,
+                image: 'pc2.jpg',
+                specs: {
+                    'Процессор': 'AMD Ryzen 5 5600',
+                    'Видеокарта': 'RTX 3050 8GB',
+                    'Материнская плата': 'B550M',
+                    'ОЗУ': '16GB DDR4 3200',
+                    'SSD': '512GB NVMe',
+                    'БП': '550W 80+ Bronze',
+                    'Корпус': 'ARDOR GAMING Rare M6',
+                    'Охлаждение': 'ID-COOLING SE-224-XTS'
+                },
+                desc: 'Первый игровой ПК. Тянет CS2, Dota 2, Valorant, Fortnite в 1080p на средних-высоких. Отличный старт.'
+            },
+            {
+                id: 'vortex-fury',
+                brand: 'VORTEX',
+                name: 'Vortex Fury',
+                price: 90000,
+                image: 'pc3.jpg',
+                specs: {
+                    'Процессор': 'AMD Ryzen 5 7500F',
+                    'Видеокарта': 'RTX 4060 8GB',
+                    'Материнская плата': 'B650M',
+                    'ОЗУ': '16GB DDR5 5200',
+                    'SSD': '1TB NVMe',
+                    'БП': '650W 80+ Bronze',
+                    'Корпус': 'DeepCool Matrexx 50',
+                    'Охлаждение': 'DeepCool AK400'
+                },
+                desc: 'Сборка на новой платформе AM5. Все современные игры в 1080p на ультра-настройках. Запас на несколько лет.'
+            },
+            {
+                id: 'vortex-storm',
+                brand: 'VORTEX',
+                name: 'Vortex Storm',
+                price: 130000,
+                image: 'pc4.jpg',
+                specs: {
+                    'Процессор': 'AMD Ryzen 7 7700',
+                    'Видеокарта': 'RTX 4060 Ti 8GB',
+                    'Материнская плата': 'B650M',
+                    'ОЗУ': '32GB DDR5 5600',
+                    'SSD': '1TB NVMe',
+                    'БП': '750W 80+ Gold',
+                    'Корпус': 'Fractal Design Pop Air',
+                    'Охлаждение': 'DeepCool AK620'
+                },
+                desc: 'Серьёзная игровая сборка. 1440p на высоких настройках в большинстве игр. Отлично подходит для стриминга.'
+            },
+            {
+                id: 'titan-forge',
+                brand: 'TITAN',
+                name: 'Titan Forge',
+                price: 180000,
+                image: 'pc5.jpg',
+                specs: {
+                    'Процессор': 'AMD Ryzen 7 7800X3D',
+                    'Видеокарта': 'RTX 4070 Super 12GB',
+                    'Материнская плата': 'B650M',
+                    'ОЗУ': '32GB DDR5 6000',
+                    'SSD': '2TB NVMe Gen4',
+                    'БП': '850W 80+ Gold',
+                    'Корпус': 'Lian Li Lancool 216',
+                    'Охлаждение': 'Thermalright Peerless Assassin'
+                },
+                desc: 'Топовая игровая сборка. 1440p на ультра и 4K на высоких. Лучший процессор для игр — 7800X3D. Идеально для стрима и контента.'
+            },
+            {
+                id: 'titan-sovereign',
+                brand: 'TITAN',
+                name: 'Titan Sovereign',
+                price: 250000,
+                image: 'pc6.jpg',
+                specs: {
+                    'Процессор': 'Intel Core i7-14700F',
+                    'Видеокарта': 'RTX 4070 Ti Super 16GB',
+                    'Материнская плата': 'Z790',
+                    'ОЗУ': '64GB DDR5 6000',
+                    'SSD': '2TB NVMe Gen4',
+                    'БП': '1000W 80+ Platinum',
+                    'Корпус': 'NZXT H5 Flow',
+                    'Охлаждение': 'NZXT Kraken 240 (СЖО)'
+                },
+                desc: 'Мощная рабочая станция для гейминга, монтажа видео и 3D. 4K-игры на ультра, быстрый рендеринг, 64 ГБ ОЗУ.'
+            },
+            {
+                id: 'apex-predator',
+                brand: 'APEX',
+                name: 'Apex Predator',
+                price: 350000,
+                image: 'pc7.jpg',
+                specs: {
+                    'Процессор': 'AMD Ryzen 9 7950X3D',
+                    'Видеокарта': 'RTX 4090 24GB',
+                    'Материнская плата': 'X670E',
+                    'ОЗУ': '64GB DDR5 6000',
+                    'SSD': '4TB NVMe Gen4',
+                    'БП': '1200W 80+ Titanium',
+                    'Корпус': 'Corsair 5000D Airflow',
+                    'Охлаждение': 'Arctic Liquid Freezer II 360'
+                },
+                desc: 'Флагманская сборка. RTX 4090 — одна из самых мощных видеокарт в мире. 4K на ультра, VR, машинное обучение, 3D-рендеринг.'
+            },
+            {
+                id: 'apex-overlord',
+                brand: 'APEX',
+                name: 'Apex Overlord',
+                price: 500000,
+                image: 'pc8.jpg',
+                specs: {
+                    'Процессор': 'AMD Ryzen 9 7950X3D',
+                    'Видеокарта': 'RTX 5090 32GB',
+                    'Материнская плата': 'X670E',
+                    'ОЗУ': '128GB DDR5 6000',
+                    'SSD': '8TB NVMe Gen5',
+                    'БП': '1200W 80+ Titanium',
+                    'Корпус': 'Lian Li O11 Dynamic XL',
+                    'Охлаждение': 'NZXT Kraken Elite 360'
+                },
+                desc: 'Абсолютный максимум. RTX 5090, 128 ГБ ОЗУ, 8 ТБ SSD Gen5. Всё, что только можно пожелать — без компромиссов.'
+            }
+        ];
+
+        // ===== ОТРИСОВКА СБОРОК =====
+        function renderBuilds() {
+            const grid = document.getElementById('buildsGrid');
+            grid.innerHTML = '';
+
+            builds.forEach(build => {
+                const card = document.createElement('div');
+                card.className = 'build-card';
+
+                const shortSpecs = Object.entries(build.specs).slice(0, 4);
+                let specsHtml = '';
+                shortSpecs.forEach(([key, value]) => {
+                    specsHtml += `<li><strong>${key}:</strong> ${value}</li>`;
+                });
+
+                card.innerHTML = `
+                    <div class="build-image">
+                        <img src="${build.image}" 
+                             alt="${build.name}" 
+                             onerror="if(this.src.endsWith('.jpg')){this.src=this.src.replace('.jpg','.png');}else if(this.src.endsWith('.png')){this.src=this.src.replace('.png','.webp');}else{this.style.display='none';this.parentElement.innerHTML='<div style=\\'font-size:80px\\'>🖥️</div>';}">
+                    </div>
+                    <div class="build-body">
+                        <div class="build-brand">${build.brand}</div>
+                        <h3>${build.name}</h3>
+                        <div class="price">${build.price.toLocaleString('ru-RU')} ₽</div>
+                        <ul class="short-specs">${specsHtml}</ul>
+                        <button onclick="openModal('${build.id}')">Подробнее →</button>
+                    </div>
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        // ===== МОДАЛЬНОЕ ОКНО =====
+        function openModal(id) {
+            const build = builds.find(b => b.id === id);
+            if (!build) return;
+
+            document.getElementById('modalTitle').textContent = build.name;
+            document.getElementById('modalPrice').textContent = build.price.toLocaleString('ru-RU') + ' ₽';
+            document.getElementById('modalImage').innerHTML = `
+                <img src="${build.image}" 
+                     alt="${build.name}" 
+                     onerror="if(this.src.endsWith('.jpg')){this.src=this.src.replace('.jpg','.png');}else if(this.src.endsWith('.png')){this.src=this.src.replace('.png','.webp');}else{this.style.display='none';this.parentElement.innerHTML='<div style=\\'font-size:110px\\'>🖥️</div>';}">
+            `;
+            document.getElementById('modalDesc').textContent = build.desc;
+
+            let specsHtml = '';
+            for (const [key, value] of Object.entries(build.specs)) {
+                specsHtml += `<li><strong>${key}</strong><span>${value}</span></li>`;
+            }
+            document.getElementById('modalSpecs').innerHTML = specsHtml;
+
+            document.getElementById('modalOverlay').classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeModal(event) {
+            if (event && event.target !== event.currentTarget) return;
+            document.getElementById('modalOverlay').classList.remove('active');
+            document.body.style.overflow = 'auto';
+        }
+
+        // ===== УМНЫЙ КОНФИГУРАТОР (ровно под бюджет) =====
+        function buildPC() {
+            const budget = parseInt(document.getElementById('budgetInput').value);
+            const resultDiv = document.getElementById('result');
+            const shareSection = document.getElementById('shareSection');
+
+            if (!budget || budget < 20000) {
+                resultDiv.style.display = 'block';
+                resultDiv.innerHTML = `<h3>⚠️ Ошибка</h3><p>Введи сумму не менее 20 000 ₽.</p>`;
+                shareSection.style.display = 'none';
+                return;
+            }
+
+            let socket, ramType;
+            if (budget >= 120000) { socket = 'AM5'; ramType = 'DDR5'; }
+            else if (budget >= 60000) { socket = 'AM4'; ramType = 'DDR4'; }
+            else { socket = 'LGA1700'; ramType = 'DDR4'; }
+
+            const cpuBudget = budget * 0.20;
+            const gpuBudget = budget * 0.45;
+
+            const suitableCPU = components.cpu.filter(c => c.socket === socket);
+            let cpu = pickBest(suitableCPU, cpuBudget);
+            let gpu = pickBest(components.gpu, gpuBudget);
+
+            const suitableMB = components.motherboard.filter(m => m.socket === socket);
+            let motherboard = pickBest(suitableMB, budget * 0.08);
+
+            const suitableRAM = components.ram.filter(r => r.type === ramType);
+            let ram = pickBest(suitableRAM, budget * 0.10);
+
+            let storage = pickBest(components.storage, budget * 0.08);
+            let pcCase = pickBest(components.case, budget * 0.05);
+            let cooler = pickBest(components.cooler, budget * 0.05);
+
+            const neededWatts = gpu.name.includes('5090') ? 1000 :
+                                gpu.name.includes('4090') ? 850 :
+                                gpu.name.includes('4080') ? 750 :
+                                gpu.name.includes('4070') ? 650 : 550;
+            const suitablePSU = components.psu.filter(p => p.watts >= neededWatts);
+            let psu = suitablePSU[0] || components.psu[components.psu.length - 1];
+
+            let total = cpu.price + gpu.price + motherboard.price + ram.price + 
+                       storage.price + psu.price + pcCase.price + cooler.price;
+            let remainder = budget - total;
+
+            // Добор компонентов
+            if (remainder > 10000) {
+                const betterRAM = suitableRAM.filter(r => r.price > ram.price && r.price - ram.price <= remainder);
+                if (betterRAM.length > 0) { const best = betterRAM[betterRAM.length - 1]; remainder -= (best.price - ram.price); ram = best; }
+            }
+            if (remainder > 5000) {
+                const betterStorage = components.storage.filter(s => s.price > storage.price && s.price - storage.price <= remainder);
+                if (betterStorage.length > 0) { const best = betterStorage[betterStorage.length - 1]; remainder -= (best.price - storage.price); storage = best; }
+            }
+            if (remainder > 3000) {
+                const betterCooler = components.cooler.filter(c => c.price > cooler.price && c.price - cooler.price <= remainder);
+                if (betterCooler.length > 0) { const best = betterCooler[betterCooler.length - 1]; remainder -= (best.price - cooler.price); cooler = best; }
+            }
+            if (remainder > 3000) {
+                const betterCase = components.case.filter(c => c.price > pcCase.price && c.price - pcCase.price <= remainder);
+                if (betterCase.length > 0) { const best = betterCase[betterCase.length - 1]; remainder -= (best.price - pcCase.price); pcCase = best; }
+            }
+            if (remainder > 3000) {
+                const betterPSU = components.psu.filter(p => p.price > psu.price && p.price - psu.price <= remainder);
+                if (betterPSU.length > 0) { const best = betterPSU[betterPSU.length - 1]; remainder -= (best.price - psu.price); psu = best; }
+            }
+            if (remainder > 5000) {
+                const betterMB = suitableMB.filter(m => m.price > motherboard.price && m.price - motherboard.price <= remainder);
+                if (betterMB.length > 0) { const best = betterMB[betterMB.length - 1]; remainder -= (best.price - motherboard.price); motherboard = best; }
+            }
+            if (remainder > 10000) {
+                const betterCPU = suitableCPU.filter(c => c.price > cpu.price && c.price - cpu.price <= remainder);
+                if (betterCPU.length > 0) { const best = betterCPU[betterCPU.length - 1]; remainder -= (best.price - cpu.price); if (best.socket === motherboard.socket) cpu = best; }
+            }
+            if (remainder > 20000) {
+                const betterGPU = components.gpu.filter(g => g.price > gpu.price && g.price - gpu.price <= remainder);
+                if (betterGPU.length > 0) { const best = betterGPU[betterGPU.length - 1]; remainder -= (best.price - gpu.price); gpu = best; }
+            }
+
+            total = cpu.price + gpu.price + motherboard.price + ram.price + 
+                   storage.price + psu.price + pcCase.price + cooler.price;
+            remainder = budget - total;
+
+            resultDiv.style.display = 'block';
+            resultDiv.innerHTML = `
+                <h3>🖥️ Твоя сборка под ${budget.toLocaleString('ru-RU')} ₽:</h3>
+                <div class="spec"><strong>Процессор</strong><span>${cpu.name}</span></div>
+                <div class="spec"><strong>Видеокарта</strong><span>${gpu.name}</span></div>
+                <div class="spec"><strong>Материнская плата</strong><span>${motherboard.name}</span></div>
+                <div class="spec"><strong>ОЗУ</strong><span>${ram.name}</span></div>
+                <div class="spec"><strong>SSD</strong><span>${storage.name}</span></div>
+                <div class="spec"><strong>БП</strong><span>${psu.name}</span></div>
+                <div class="spec"><strong>Корпус</strong><span>${pcCase.name}</span></div>
+                <div class="spec"><strong>Охлаждение</strong><span>${cooler.name}</span></div>
+                <div class="total-label">Итоговая стоимость:</div>
+                <div class="total">${total.toLocaleString('ru-RU')} ₽</div>
+                ${remainder < budget * 0.03 ? `<div style="margin-top: 15px; text-align: center; color: #4caf50; font-weight: 600;">✅ Сборка максимально близко к бюджету! Остаток: ${remainder.toLocaleString('ru-RU')} ₽</div>` : ''}
+            `;
+
+            shareSection.style.display = 'block';
+            window.currentBuild = {
+                name: `Сборка под ${budget.toLocaleString('ru-RU')} ₽`,
+                specs: {
+                    'Процессор': cpu.name,
+                    'Видеокарта': gpu.name,
+                    'Материнская плата': motherboard.name,
+                    'ОЗУ': ram.name,
+                    'SSD': storage.name,
+                    'БП': psu.name,
+                    'Корпус': pcCase.name,
+                    'Охлаждение': cooler.name
+                },
+                price: total
+            };
+        }
+
+        function pickBest(arr, maxPrice) {
+            const sorted = [...arr].sort((a, b) => b.price - a.price);
+            const found = sorted.find(item => item.price <= maxPrice);
+            return found || arr.sort((a, b) => a.price - b.price)[0];
+        }
+
+        // ===== ПОДЕЛИТЬСЯ =====
+        function shareResult() {
+            if (!window.currentBuild) return;
+            const build = window.currentBuild;
+            let specsText = '';
+            for (const [key, value] of Object.entries(build.specs)) {
+                specsText += `${key}: ${value}\n`;
+            }
+            const text = `🖥️ ${build.name}\n\n${specsText}\nИтого: ${build.price.toLocaleString('ru-RU')} ₽`;
+            if (navigator.share) {
+                navigator.share({ title: 'Сборка ПК', text: text }).catch(() => copyToClipboard(text));
+            } else {
+                copyToClipboard(text);
+            }
+        }
+
+        function copyToClipboard(text) {
+            navigator.clipboard.writeText(text).then(() => {
+                alert('✅ Сборка скопирована! Отправь её другу.');
+            }).catch(() => {
+                const textarea = document.createElement('textarea');
+                textarea.value = text;
+                document.body.appendChild(textarea);
+                textarea.select();
+                document.execCommand('copy');
+                document.body.removeChild(textarea);
+                alert('✅ Сборка скопирована! Отправь её другу.');
+            });
+        }
+
+        renderBuilds();
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') closeModal();
+        });
+    </script>
+
+</body>
+</html>
